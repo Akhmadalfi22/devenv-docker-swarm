@@ -1,0 +1,50 @@
+services:
+  agent:
+    image: portainer/agent:2.33.3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - agent_network
+    deploy:
+      mode: global
+      placement:
+        constraints: [ node.platform.os == linux ]
+
+  portainer:
+    image: portainer/portainer-ce:2.33.3
+    command: -H tcp://tasks.agent:9001 --tlsskipverify --base-url /portainer
+    ports:
+      - "9000:9000" # Portainer UI HTTP
+      - "9443:9443" # Portainer UI HTTPS
+    networks:
+      - agent_network
+      - traefik
+    volumes:
+      - portainer_data:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [ node.role == manager ]
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        - "traefik.http.routers.portainer.rule=Host(`localhost`) && PathPrefix(`/portainer`)"
+        - "traefik.http.routers.portainer.entrypoints=web"
+        - "traefik.http.routers.portainer.service=portainer"
+        - "traefik.http.routers.portainer.middlewares=portainer_redirect,portainer_stripprefix"
+        - "traefik.http.middlewares.portainer_redirect.redirectregex.regex=^(.*)/portainer$$"
+        - "traefik.http.middlewares.portainer_redirect.redirectregex.replacement=$${1}/portainer/"
+        - "traefik.http.middlewares.portainer_stripprefix.stripprefix.prefixes=/portainer"
+        - "traefik.http.services.portainer.loadbalancer.server.port=9000" # Portainer UI HTTP
+
+networks:
+  agent_network:
+    driver: overlay
+    attachable: true
+  traefik:
+    external: true
+
+volumes:
+  portainer_data:

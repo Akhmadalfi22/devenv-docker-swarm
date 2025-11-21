@@ -1,0 +1,31 @@
+services:
+  redis:
+    image: redis:8.2.3
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_USERNAME_FILE=/run/secrets/redis-username
+      - REDIS_PASSWORD_FILE=/run/secrets/redis-password
+    networks:
+      - redis
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    deploy:
+      mode: replicated
+      replicas: ${REDIS_REPLICAS:-1}
+      placement:
+        constraints: [ node.role == manager ]
+
+networks:
+  redis:
+    name: redis
+    attachable: true
+
+secrets:
+  redis-username:
+    external: true
+  redis-password:
+    external: true

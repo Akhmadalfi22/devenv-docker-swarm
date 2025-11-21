@@ -1,0 +1,32 @@
+services:
+  influxdb:
+    image: influxdb:2.7.12
+    ports:
+      - "8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME_FILE: /run/secrets/influxdb-username
+      DOCKER_INFLUXDB_INIT_PASSWORD_FILE: /run/secrets/influxdb-password
+      DOCKER_INFLUXDB_INIT_ORG: org
+      DOCKER_INFLUXDB_INIT_BUCKET: metrics
+    networks:
+      - influxdb
+    secrets:
+      - influxdb-username
+      - influxdb-password
+    deploy:
+      mode: replicated
+      replicas: ${INFLUXDB_REPLICAS:-1}
+      placement:
+        constraints: [ node.role == manager ]
+
+networks:
+  influxdb:
+    name: influxdb
+    attachable: true
+
+secrets:
+  influxdb-username:
+    external: true
+  influxdb-password:
+    external: true

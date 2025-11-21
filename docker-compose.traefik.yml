@@ -1,0 +1,52 @@
+services:
+  traefik:
+    image: traefik:v3.6.1
+    command:
+      - --api.insecure=true # Enable Traefik API directly on a path /api
+      - --api.dashboard=true # Enable Traefik dashboard
+      - --providers.swarm=true # Enable Docker Swarm in Traefik
+      - --providers.swarm.exposedByDefault=false # Do not expose all Docker Swarm services
+      - --providers.swarm.network=traefik
+      - --entrypoints.web.address=:80 # Create an entrypoint "http" listening on address 80
+      - --entrypoints.websecure.address=:443 # Create an entrypoint "https" listening on address 443
+    ports:
+      - "80:80" # Traefik HTTP Web
+      - "443:443" # Traefik HTTPS WebSecure
+      - "8080:8080" # Traefik Dashboard
+    networks:
+      - traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [ node.role == manager ]
+
+  whoami:
+    image: traefik/whoami:v1.11.0
+    depends_on:
+      - traefik
+    networks:
+      - traefik
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [ node.role == manager ]
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.whoami.rule=Host(`localhost`) && PathPrefix(`/whoami`)"
+        - "traefik.http.routers.whoami.entrypoints=web"
+        - "traefik.http.routers.whoami.middlewares=whoami_strip"
+        - "traefik.http.routers.whoami-secure.rule=Host(`localhost`) && PathPrefix(`/whoami`)"
+        - "traefik.http.routers.whoami-secure.entrypoints=websecure"
+        - "traefik.http.routers.whoami-secure.tls=true"
+        - "traefik.http.routers.whoami-secure.middlewares=whoami_strip"
+        - "traefik.http.middlewares.whoami_strip.stripprefix.prefixes=/whoami"
+        - "traefik.http.services.whoami.loadbalancer.server.port=80"
+
+networks:
+  traefik:
+    name: traefik # Allow external containers to join the network
+    attachable: true

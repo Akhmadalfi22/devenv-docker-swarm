@@ -1,0 +1,26 @@
+services:
+  neo4j:
+    image: neo4j:5.26.16
+    ports:
+      - "7474:7474" # HTTP
+      - "7687:7687" # Bolt
+    environment:
+      - NEO4J_AUTH_FILE=/run/secrets/neo4j-auth
+    networks:
+      - neo4j
+    secrets:
+      - neo4j-auth
+    deploy:
+      mode: replicated
+      replicas: ${NEO4J_REPLICAS:-1}
+      placement:
+        constraints: [ node.role == manager ]
+
+networks:
+  neo4j:
+    name: neo4j
+    attachable: true
+
+secrets:
+  neo4j-auth:
+    external: true

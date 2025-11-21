@@ -1,0 +1,29 @@
+services:
+  maildev:
+    image: maildev/maildev:2.2.1
+    environment:
+      MAILDEV_SMTP_PORT: 1025
+      MAILDEV_WEB_PORT: 1080
+      MAILDEV_BASE_PATHNAME: /maildev
+    entrypoint: |
+      sh -c "
+        USER=$$(cat /run/secrets/maildev-username)
+        PASSWORD=$$(cat /run/secrets/maildev-password)
+        exec bin/maildev --web 1080 --smtp 1025 --web-user "$$USER" --web-pass "$$PASSWORD"
+      "
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    secrets:
+      - maildev-username
+      - maildev-password
+
+networks:
+  traefik:
+    external: true
+
+secrets:
+  maildev-username:
+    external: true
+  maildev-password:
+    external: true

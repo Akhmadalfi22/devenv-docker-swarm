@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:17.5
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER_FILE: /run/secrets/postgres-user
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres-password
+    configs:
+      - source: init_sql
+        target: /docker-entrypoint-initdb.d/init.sql
+    networks:
+      - postgres
+    secrets:
+      - postgres-user
+      - postgres-password
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    deploy:
+      mode: replicated
+      replicas: ${POSTGRES_REPLICAS:-1}
+      placement:
+        constraints: [ node.role == manager ]
+
+networks:
+  postgres:
+    name: postgres
+    attachable: true
+
+configs:
+  init_sql:
+    file: ./config/postgres/docker-entrypoint-initdb.d/init.sql
+
+secrets:
+  postgres-user:
+    external: true
+  postgres-password:
+    external: true

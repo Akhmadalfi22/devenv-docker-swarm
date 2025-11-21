@@ -1,0 +1,75 @@
+x-mongo-base: &mongo-base
+  image: mongo:8.2.1
+  environment:
+    MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/mongo-username
+    MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo-password
+  networks:
+    mongo:
+  secrets:
+    - mongo-keyfile
+    - mongo-username
+    - mongo-password
+
+x-mongo-base-entrypoint: &mongo-base-entrypoint
+  <<: *mongo-base
+  entrypoint: |
+    bash -c "
+      cp /run/secrets/mongo-keyfile /data/keyfile
+      chmod 400 /data/keyfile
+      chown mongodb:mongodb /data/keyfile
+      docker-entrypoint.sh mongod --keyFile /data/keyfile --replSet rs0 --bind_ip_all
+    "
+
+services:
+  mongo1:
+    <<: *mongo-base-entrypoint
+    ports:
+      - "27017:27017"
+    deploy:
+      mode: replicated
+      replicas: ${MONGO1_REPLICAS:-1}
+      placement:
+        constraints: [ node.role == manager ]
+
+  mongo2:
+    <<: *mongo-base-entrypoint
+    deploy:
+      mode: replicated
+      replicas: ${MONGO2_REPLICAS:-1}
+      placement:
+        constraints: [ node.platform.os == linux ]
+
+  mongo3:
+    <<: *mongo-base-entrypoint
+    deploy:
+      mode: replicated
+      replicas: ${MONGO3_REPLICAS:-1}
+      placement:
+        constraints: [ node.platform.os == linux ]
+
+  mongo-init:
+    <<: *mongo-base
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    volumes:
+      - ./config/mongo/init-replicaset.sh:/docker-entrypoint-initdb.d/init-replicaset.sh:ro
+    deploy:
+      mode: replicated
+      replicas: ${MONGO_INIT_REPLICAS:-1}
+      placement:
+        constraints: [ node.role == manager ]
+
+networks:
+  mongo:
+    name: mongo
+    attachable: true
+
+secrets:
+  mongo-keyfile:
+    external: true
+  mongo-username:
+    external: true
+  mongo-password:
+    external: true

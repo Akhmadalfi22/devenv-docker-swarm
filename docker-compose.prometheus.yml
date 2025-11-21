@@ -1,0 +1,17 @@
+services:
+  prometheus:
+    image: prom/prometheus:v3.7.3
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - prometheus
+    deploy:
+      mode: replicated
+      replicas: ${PROMETHEUS_REPLICAS:-1}
+
+networks:
+  prometheus:
+    name: prometheus
+    attachable: true

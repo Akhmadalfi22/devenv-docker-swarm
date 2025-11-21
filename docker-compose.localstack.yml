@@ -1,0 +1,15 @@
+services:
+  localstack:
+    image: localstack/localstack:4.10.0
+    ports:
+      - "4566:4566" # LocalStack Gateway
+      - "4510-4559:4510-4559" # External services port range
+    environment:
+      - SERVICES=s3,iam,sts
+    deploy:
+      mode: replicated
+      replicas: ${LOCALSTACK_REPLICAS:-1}
+
+networks:
+  localstack:
+    name: localstack

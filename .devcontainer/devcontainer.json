@@ -1,0 +1,67 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+{
+	"name": "Docker Swarm Stacks",
+
+	// Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+
+	"runArgs": ["--name", "docker-swarm-stacks"],
+
+	"features": {
+		// https://github.com/devcontainers/templates/tree/main/src/docker-outside-of-docker
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+			"version": "latest",
+			"moby": "true"
+		},
+		// https://github.com/devcontainers/features/tree/main/src/aws-cli
+		"ghcr.io/devcontainers/features/aws-cli:1": {},
+		// https://github.com/devcontainers/features/tree/main/src/go
+		"ghcr.io/devcontainers/features/go:1": {},
+		// https://github.com/devcontainers/features/tree/main/src/terraform
+		"ghcr.io/devcontainers/features/terraform:1": {}
+	},
+
+	// Use this environment variable if you need to bind mount your local source code into a new container.
+	"remoteEnv": {
+		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Publish ports to the host.
+	// "appPort": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "post-create",
+
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			// Identifier of extensions you want installed when the container is created
+			"extensions": [
+				"hashicorp.terraform",
+				"redhat.vscode-yaml",
+				"streetsidesoftware.code-spell-checker",
+				"ms-azuretools.vscode-docker",
+				"golang.go",
+				"asciidoctor.asciidoctor-vscode"
+			],
+			"settings": {
+				"editor.tabSize": 2,
+				
+				// Terraform settings
+				"[terraform]": {
+					"editor.defaultFormatter": "hashicorp.terraform",
+					"editor.formatOnSave": true,
+					"editor.tabSize": 2
+				}
+			}
+		}
+	}
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

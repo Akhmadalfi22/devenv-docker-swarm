@@ -1,0 +1,152 @@
+x-temporal-network: &temporal-network
+  networks:
+    - temporal
+    - postgres
+    - nginx
+
+x-temporal-secrets: &temporal-secrets
+  secrets:
+    - postgres-user
+    - postgres-password
+
+x-temporal-base-server: &temporal-base-server
+  image: temporalio/server:1.29.1
+  entrypoint: [ "/bin/bash", "-c" ]
+  command: >
+    "export DB=postgres12
+     export DB_PORT=5432
+     export POSTGRES_SEEDS=postgres_postgres
+     export POSTGRES_USER=$$(cat /run/secrets/postgres-user)
+     export POSTGRES_PWD=$$(cat /run/secrets/postgres-password)
+     /etc/temporal/entrypoint.sh"
+  <<:
+   - *temporal-network
+   - *temporal-secrets
+
+x-temporal-base-auto-setup: &temporal-base-auto-setup
+  image: temporalio/auto-setup:1.29.1 # use temporalio/auto-setup to automatically setup DB schema and namespaces
+  entrypoint: [ "/bin/bash", "-c" ]
+  command: >
+    "export DB=postgres12
+     export DB_PORT=5432
+     export POSTGRES_SEEDS=postgres_postgres
+     export POSTGRES_USER=$$(cat /run/secrets/postgres-user)
+     export POSTGRES_PWD=$$(cat /run/secrets/postgres-password)
+     /etc/temporal/entrypoint.sh autosetup"
+  <<:
+    - *temporal-network
+    - *temporal-secrets
+
+services:
+  temporal-history:
+    <<: *temporal-base-auto-setup
+    environment:
+      - SERVICES=history
+      - TEMPORAL_HISTORY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_VISIBILITY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_ADDRESS=nginx_nginx:7233
+    ports:
+      - "7234:7234"
+    deploy:
+      mode: replicated
+      replicas: ${TEMPORAL_REPLICAS:-1}
+
+  temporal-matching:
+    <<: *temporal-base-server
+    depends_on:
+      - temporal-history
+    environment:
+      - SERVICES=matching
+      - TEMPORAL_HISTORY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_VISIBILITY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_ADDRESS=nginx_nginx:7233
+    ports:
+      - "7235:7235"
+
+    deploy:
+      mode: replicated
+      replicas: ${TEMPORAL_REPLICAS:-1}
+
+  temporal-frontend:
+    <<: *temporal-base-server
+    depends_on:
+      - temporal-matching
+    hostname: temporal
+    environment:
+      - SERVICES=frontend
+      - TEMPORAL_HISTORY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_VISIBILITY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_ADDRESS=nginx_nginx:7233
+      - FRONTEND_GRPC_PORT=7233
+      - BIND_ON_IP=0.0.0.0 # Bind Temporal frontend to all interfaces so it is reachable by other containers in the same Docker Swarm overlay network.
+    networks:
+      temporal:
+      postgres:
+      nginx:
+        aliases:
+          # Allow nginx to resolve 'temporal' to 'temporal-frontend' in nginx.conf upstream block.
+          # Needed because Docker Swarm adds stack name with underscores, causing DNS issues.
+          - temporal
+    deploy:
+      mode: replicated
+      replicas: ${TEMPORAL_REPLICAS:-1}
+      endpoint_mode: dnsrr
+
+  temporal-worker:
+    <<: *temporal-base-server
+    depends_on:
+      - temporal-frontend
+    environment:
+      - SERVICES=worker
+      - TEMPORAL_HISTORY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_VISIBILITY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_ADDRESS=nginx_nginx:7233
+    ports:
+      - "7232:7232"
+    deploy:
+      mode: replicated
+      replicas: ${TEMPORAL_REPLICAS:-1}
+
+  temporal-admin-tools:
+    image: temporalio/admin-tools:1.29
+    environment:
+      - TEMPORAL_ADDRESS=nginx_nginx:7233
+    networks:
+      - temporal
+      - nginx
+    stdin_open: true
+    tty: true
+    deploy:
+      mode: replicated
+      replicas: ${TEMPORAL_REPLICAS:-1}
+
+  temporal-ui:
+    image: temporalio/ui:2.43.3
+    depends_on:
+      - temporal-frontend
+    ports:
+      - "8081:8080"
+    environment:
+      - TEMPORAL_ADDRESS=nginx_nginx:7233
+      - TEMPORAL_UI_PUBLIC_PATH=/temporal
+    networks:
+      - temporal
+      - nginx
+    deploy:
+      mode: replicated
+      replicas: ${TEMPORAL_REPLICAS:-1}
+
+networks:
+  temporal:
+    name: temporal
+    attachable: true
+  postgres:
+    external: true
+  nginx:
+    external: true
+
+secrets:
+  postgres-user:
+    external: true
+  postgres-password:
+    external: true

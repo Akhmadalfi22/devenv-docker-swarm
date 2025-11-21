@@ -1,0 +1,77 @@
+services:
+  grafana:
+    image: grafana/grafana:12.2.1
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_FEATURE_TOGGLES_ENABLE=alertingSimplifiedRouting,alertingQueryAndExpressionsStepMode
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config/grafana/provisioning/datasources/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml
+    networks:
+      - grafana
+      - prometheus
+    deploy:
+      mode: replicated
+      replicas: ${GRAFANA_REPLICAS:-1}
+
+  loki:
+    image: grafana/loki:3.5.8
+    depends_on:
+      - grafana
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./config/grafana/loki/local-config.yaml:/etc/loki/local-config.yaml
+    networks:
+      - grafana
+    deploy:
+      mode: replicated
+      replicas: ${GRAFANA_REPLICAS:-1}
+
+  tempo:
+    image: grafana/tempo:2.9.0
+    hostname: tempo
+    depends_on:
+      - grafana
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./config/grafana/tempo/tempo.yaml:/etc/tempo.yaml
+    ports:
+      - "14268:14268" # Jaeger Thrift Http
+      - "14250:1425"  # Jaeger Grpc
+      - "3200:3200"   # Tempo Http
+      - "9095:9095"   # Tempo grpc
+      - "4317:4317"   # OTLP grpc
+      - "4318:4318"   # OTLP http
+      - "9411:9411"   # Zipkin
+    networks:
+      grafana:
+        aliases:
+          - tempo
+      prometheus:
+    deploy:
+      mode: replicated
+      replicas: ${GRAFANA_REPLICAS:-1}
+
+  promtail:
+    image: grafana/promtail:3.5.8
+    depends_on:
+      - loki
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - ./config/grafana/promtail/config.yml:/etc/promtail/config.yml
+    networks:
+      - grafana
+    deploy:
+      mode: replicated
+      replicas: ${GRAFANA_REPLICAS:-1}
+
+networks:
+  grafana:
+    name: grafana
+  prometheus:
+    external: true

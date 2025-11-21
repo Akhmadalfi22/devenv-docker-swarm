@@ -1,0 +1,54 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4
+    environment:
+      KC_HOSTNAME: http://localhost/keycloak # Address at which the server is exposed
+      KC_HOSTNAME_ADMIN: http://localhost/keycloak # Address for accessing the administration console
+      KC_HTTP_RELATIVE_PATH: /keycloak # Context path behind a reverse proxy
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres_postgres:5432/keycloak
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+    entrypoint: [ "/bin/bash", "-c" ]
+    # Keycloak does not support the *_FILE suffix for environment variables.
+    # To use Docker Secrets, values must be manually read and exported as environment variables.
+    command: >
+      "export KC_BOOTSTRAP_ADMIN_USERNAME=$$(cat /run/secrets/keycloak-admin-username)
+       export KC_BOOTSTRAP_ADMIN_PASSWORD=$$(cat /run/secrets/keycloak-admin-password)
+       export KC_DB_USERNAME=$$(cat /run/secrets/postgres-user)
+       export KC_DB_PASSWORD=$$(cat /run/secrets/postgres-password)
+       /opt/keycloak/bin/kc.sh start-dev --import-realm"
+    volumes:
+      - ./config/keycloak/import:/opt/keycloak/data/import
+    networks:
+      - traefik
+      - postgres
+    secrets:
+      - keycloak-admin-username
+      - keycloak-admin-password
+      - postgres-user
+      - postgres-password
+    deploy:
+      mode: replicated
+      replicas: ${KEYCLOAK_REPLICAS:-1}
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.keycloak.rule=Host(`localhost`) && PathPrefix(`/keycloak`)"
+        - "traefik.http.routers.keycloak.service=keycloak"
+        - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+
+networks:
+  traefik:
+    external: true
+  postgres:
+    external: true
+
+secrets:
+  keycloak-admin-username:
+    external: true
+  keycloak-admin-password:
+    external: true
+  postgres-user:
+    external: true
+  postgres-password:
+    external: true
