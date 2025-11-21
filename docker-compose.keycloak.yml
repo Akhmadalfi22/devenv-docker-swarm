@@ -18,11 +18,14 @@ services:
        export KC_DB_USERNAME=$$(cat /run/secrets/postgres-user)
        export KC_DB_PASSWORD=$$(cat /run/secrets/postgres-password)
        /opt/keycloak/bin/kc.sh start-dev --import-realm"
-    volumes:
-      - ./config/keycloak/import:/opt/keycloak/data/import
     networks:
       - traefik
       - postgres
+    configs:
+      - source: import-test-realm
+        target: /opt/keycloak/data/import/test-realm.json
+      - source: import-test-users
+        target: /opt/keycloak/data/import/test-users-0.json
     secrets:
       - keycloak-admin-username
       - keycloak-admin-password
@@ -42,6 +45,12 @@ networks:
     external: true
   postgres:
     external: true
+
+configs:
+  import-test-realm:
+    file: ./config/keycloak/import/test-realm.json
+  import-test-users:
+    file: ./config/keycloak/import/test-users-0.json
 
 secrets:
   keycloak-admin-username:

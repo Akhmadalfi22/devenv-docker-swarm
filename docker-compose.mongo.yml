@@ -53,8 +53,9 @@ services:
       - mongo1
       - mongo2
       - mongo3
-    volumes:
-      - ./config/mongo/init-replicaset.sh:/docker-entrypoint-initdb.d/init-replicaset.sh:ro
+    configs:
+      - source: init-replicaset
+        target: /docker-entrypoint-initdb.d/init-replicaset.sh:ro
     deploy:
       mode: replicated
       replicas: ${MONGO_INIT_REPLICAS:-1}
@@ -65,6 +66,10 @@ networks:
   mongo:
     name: mongo
     attachable: true
+
+configs:
+  init-replicaset:
+    file: ./config/mongo/init-replicaset.sh
 
 secrets:
   mongo-keyfile:

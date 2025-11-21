@@ -1,15 +1,11 @@
 services:
   maildev:
     image: maildev/maildev:2.2.1
-    environment:
-      MAILDEV_SMTP_PORT: 1025
-      MAILDEV_WEB_PORT: 1080
-      MAILDEV_BASE_PATHNAME: /maildev
     entrypoint: |
       sh -c "
         USER=$$(cat /run/secrets/maildev-username)
         PASSWORD=$$(cat /run/secrets/maildev-password)
-        exec bin/maildev --web 1080 --smtp 1025 --web-user "$$USER" --web-pass "$$PASSWORD"
+        exec bin/maildev --base-pathname /maildev --web 1080 --smtp 1025 --web-user "$$USER" --web-pass "$$PASSWORD"
       "
     ports:
       - "1080:1080"
@@ -17,6 +13,15 @@ services:
     secrets:
       - maildev-username
       - maildev-password
+    deploy:
+      mode: replicated
+      replicas: ${MAILDEV_REPLICAS:-1}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:1080/maildev/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 networks:
   traefik:

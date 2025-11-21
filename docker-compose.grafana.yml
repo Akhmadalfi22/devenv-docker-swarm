@@ -8,11 +8,12 @@ services:
       - GF_FEATURE_TOGGLES_ENABLE=alertingSimplifiedRouting,alertingQueryAndExpressionsStepMode
     ports:
       - "3000:3000"
-    volumes:
-      - ./config/grafana/provisioning/datasources/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml
     networks:
       - grafana
       - prometheus
+    configs:
+      - source: grafana-datasources
+        target: /etc/grafana/provisioning/datasources/ds.yaml
     deploy:
       mode: replicated
       replicas: ${GRAFANA_REPLICAS:-1}
@@ -24,10 +25,11 @@ services:
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
-    volumes:
-      - ./config/grafana/loki/local-config.yaml:/etc/loki/local-config.yaml
     networks:
       - grafana
+    configs:
+      - source: loki-config
+        target: /etc/loki/local-config.yaml
     deploy:
       mode: replicated
       replicas: ${GRAFANA_REPLICAS:-1}
@@ -38,8 +40,6 @@ services:
     depends_on:
       - grafana
     command: [ "-config.file=/etc/tempo.yaml" ]
-    volumes:
-      - ./config/grafana/tempo/tempo.yaml:/etc/tempo.yaml
     ports:
       - "14268:14268" # Jaeger Thrift Http
       - "14250:1425"  # Jaeger Grpc
@@ -53,6 +53,9 @@ services:
         aliases:
           - tempo
       prometheus:
+    configs:
+      - source: tempo-config
+        target: /etc/tempo.yaml
     deploy:
       mode: replicated
       replicas: ${GRAFANA_REPLICAS:-1}
@@ -62,10 +65,11 @@ services:
     depends_on:
       - loki
     command: -config.file=/etc/promtail/config.yml
-    volumes:
-      - ./config/grafana/promtail/config.yml:/etc/promtail/config.yml
     networks:
       - grafana
+    configs:
+      - source: promtail-config
+        target: /etc/promtail/config.yml
     deploy:
       mode: replicated
       replicas: ${GRAFANA_REPLICAS:-1}
@@ -75,3 +79,13 @@ networks:
     name: grafana
   prometheus:
     external: true
+
+configs:
+  grafana-datasources:
+    file: ./config/grafana/provisioning/datasources/ds.yaml
+  loki-config:
+    file: ./config/grafana/loki/local-config.yaml
+  tempo-config:
+    file: ./config/grafana/tempo/tempo.yaml
+  promtail-config:
+    file: ./config/grafana/promtail/config.yml

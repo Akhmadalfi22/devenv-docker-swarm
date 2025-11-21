@@ -1,8 +1,9 @@
 services:
   prometheus:
     image: prom/prometheus:v3.7.3
-    volumes:
-      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    configs:
+      - source: prometheus-config
+        target: /etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
     networks:
@@ -15,3 +16,7 @@ networks:
   prometheus:
     name: prometheus
     attachable: true
+
+configs:
+  prometheus-config:
+    file: ./config/prometheus/prometheus.yml

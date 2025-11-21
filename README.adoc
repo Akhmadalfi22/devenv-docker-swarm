@@ -3,6 +3,7 @@
 :toclevels: 2
 
 // For image versions, check the stack's `docker-compose.*.yml` files
+:host: localhost
 :traefik-version: 3.6.1
 :traefik-whoami-version: 1.11.0
 :nginx-version: 1.29.3
@@ -140,38 +141,38 @@ Create a _variables.tfvars_ file to override these with real secrets for product
 |===
 |Stack |URL | Compose file | Services | Environment Variables
 
-|<<traefik>> | http://localhost:8080 +
-http://localhost/whoami | link:docker-compose.traefik.yml[] | - Traefik ({traefik-version}) +
+|<<traefik>> | http://{host}:8080 +
+http://{host}/whoami | link:docker-compose.traefik.yml[] | - Traefik ({traefik-version}) +
 - whoami ({traefik-whoami-version}) |
 
-|<<nginx>> | http://localhost:7233 | link:docker-compose.nginx.yml[] | NGINX ({nginx-version}) |
+|<<nginx>> | http://{host}:7233 | link:docker-compose.nginx.yml[] | NGINX ({nginx-version}) |
 
-|<<portainer>> | http://localhost:9000 +
-http://localhost/portainer | link:docker-compose.portainer.yml[] | 
+|<<portainer>> | http://{host}:9000 +
+http://{host}/portainer | link:docker-compose.portainer.yml[] | 
 - Portainer CE ({portainer-ce-version}) +
 - Portainer Agent ({portainer-agent-version}) |
 
-|<<postgres>> | http://localhost:5432 | link:docker-compose.postgres.yml[] | Postgres ({postgres-version}) | POSTGRES_REPLICAS
+|<<postgres>> | http://{host}:5432 | link:docker-compose.postgres.yml[] | Postgres ({postgres-version}) | POSTGRES_REPLICAS
 
-|<<mongo>> | http://localhost:27017 | link:docker-compose.mongo.yml[] | Mongo ({mongo-version}) | MONGO1_REPLICAS +
+|<<mongo>> | http://{host}:27017 | link:docker-compose.mongo.yml[] | Mongo ({mongo-version}) | MONGO1_REPLICAS +
 MONGO2_REPLICAS +
 MONGO3_REPLICAS +
 MONGO_INIT_REPLICAS
 
-|<<redis>> | http://localhost:6379 | link:docker-compose.redis.yml[] | Redis ({redis-version}) | REDIS_REPLICAS
+|<<redis>> | http://{host}:6379 | link:docker-compose.redis.yml[] | Redis ({redis-version}) | REDIS_REPLICAS
 
-|<<influxdb>> | http://localhost:8086 | link:docker-compose.influxdb.yml[] | InfluxDB ({influxdb-version}) | INFLUXDB_REPLICAS
+|<<influxdb>> | http://{host}:8086 | link:docker-compose.influxdb.yml[] | InfluxDB ({influxdb-version}) | INFLUXDB_REPLICAS
 
-|<<neo4j>> | http://localhost:7474 +
-http://localhost:7687 | link:docker-compose.neo4j.yml[] | Neo4j ({neo4j-version}) | NEO4J_REPLICAS
+|<<neo4j>> | http://{host}:7474 +
+http://{host}:7687 | link:docker-compose.neo4j.yml[] | Neo4j ({neo4j-version}) | NEO4J_REPLICAS
 
-|<<keycloak>> | http://localhost/keycloak/ | link:docker-compose.keycloak.yml[] | Keycloak ({keycloak-version}) | KEYCLOAK_REPLICAS
+|<<keycloak>> | http://{host}/keycloak/ | link:docker-compose.keycloak.yml[] | Keycloak ({keycloak-version}) | KEYCLOAK_REPLICAS
 
-|<<kafka>> | http://localhost:9092 | link:docker-compose.kafka.yml[] | Kafka ({kafka-version}) | KAFKA_REPLICAS
+|<<kafka>> | http://{host}:9092 | link:docker-compose.kafka.yml[] | Kafka ({kafka-version}) | KAFKA_REPLICAS
 
-|<<maildev>> | http://localhost:1080 | link:docker-compose.maildev.yml[] | MailDev ({maildev-version}) | MAILDEV_REPLICAS
+|<<maildev>> | http://{host}:1080 | link:docker-compose.maildev.yml[] | MailDev ({maildev-version}) | MAILDEV_REPLICAS
 
-|<<temporal>> | http://localhost:8081/temporal/ | link:docker-compose.temporal.yml[] | 
+|<<temporal>> | http://{host}:8081/temporal/ | link:docker-compose.temporal.yml[] | 
 - Temporal History ({temporal-base-version}) +
 - Temporal Matching ({temporal-base-version}) +
 - Temporal Frontend ({temporal-base-version}) +
@@ -180,16 +181,16 @@ http://localhost:7687 | link:docker-compose.neo4j.yml[] | Neo4j ({neo4j-version}
 - Temporal Admin Tool ({temporal-admin-tools-version}) +
 - Temporal UI ({temporal-ui-version}) | TEMPORAL_REPLICAS
 
-|<<localstack>> | http://localhost:4566 | link:docker-compose.localstack.yml[] | 
+|<<localstack>> | http://{host}:4566 | link:docker-compose.localstack.yml[] | 
 - S3 ({localstack-version}) +
 - IAM ({localstack-version}) +
 - STS ({localstack-version}) | LOCALSTACK_REPLICAS
 
-|<<prometheus>> | http://localhost:9090 | link:docker-compose.prometheus.yml[] | Prometheus ({prometheus-version}) | PROMETHEUS_REPLICAS
+|<<prometheus>> | http://{host}:9090 | link:docker-compose.prometheus.yml[] | Prometheus ({prometheus-version}) | PROMETHEUS_REPLICAS
 
-|<<grafana>> | http://localhost:3000 +
-http://localhost:3100 +
-http://localhost:3200 | link:docker-compose.grafana.yml[] | 
+|<<grafana>> | http://{host}:3000 +
+http://{host}:3100 +
+http://{host}:3200 | link:docker-compose.grafana.yml[] | 
 - Grafana {grafana-version} +
 - Loki ({grafana-loki-version}) +
 - Tempo ({grafana-tempo-version}) +
