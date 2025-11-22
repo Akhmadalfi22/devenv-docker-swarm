@@ -453,3 +453,7 @@ cd test && go test -v
 == Conventions
 - Compose file name `docker-compose.<stack>.yml`
 - Use `example.com` (RFC 2606 reserved for testing and documentation)
+
+== References
+- https://hub.docker.com/[Docker Hub]
+- https://registry.terraform.io/[Terraform Registry]
