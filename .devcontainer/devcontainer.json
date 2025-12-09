@@ -62,6 +62,6 @@
 		}
 	}
 
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root. By default vscode.
 	// "remoteUser": "root"
 }
